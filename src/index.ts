@@ -1,25 +1,20 @@
 import * as readline from 'readline';
+import fs from 'fs';
 
-let rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout
-});
+const reader = readline.createInterface(fs.createReadStream(".\\src\\testCmd.txt"))
 
-let command : Array<string> = [];
+let commands: Array<string> = [];
+reader.on("line", (line: string) => {
+    commands.push(line);
+})
 
-let finish : Boolean = false;
-while (!finish) {
-  rl.question('Please enter commands (enter \'exit\' to finish): ', (answer : string) => {
-    switch(answer.toLowerCase()) {
-      case 'exit':
-          finish = true;
-        break;
-      default:
-        command.push(answer);
-        break;
-    }
-    rl.close();
-  });
-}
+reader.on("close", ()=> {
+    console.log(`Data has been read ${commands.length}` );
+    commands.forEach(command => {
+        console.log(command);
+    });
+    commands = commands.filter((command) => command.length > 0);
 
+    
 
+})
