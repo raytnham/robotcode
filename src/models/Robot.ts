@@ -1,6 +1,6 @@
 import { Direction } from '../enums/Direction';
 
-class Robot {
+export class Robot {
     private xCoordinate: number;
     private yCoordinate: number;
     private direction: Direction;
@@ -16,6 +16,8 @@ class Robot {
         this.yCoordinate = yCoordinate;
         this.direction = direction;
     }
+
+    public getX = () => {return this.xCoordinate}
 
     public move = () => {
         switch(this.direction) {
