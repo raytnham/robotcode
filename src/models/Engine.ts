@@ -1,8 +1,9 @@
-import { Command } from '../interfaces/Command';
-import { CommandType } from '../enums/CommandType';
-import { Direction } from '../enums/Direction';
 import Board from './Board';
 import Robot from './Robot';
+import { CommandType } from '../enums/CommandType';
+import { Direction } from '../enums/Direction';
+import { Command } from '../interfaces/Command';
+import { Output } from '../interfaces/Output';
 
 export default class Engine {
     private commands: Array<string>;
@@ -15,59 +16,80 @@ export default class Engine {
         this.boardDimensionY = boardDimensionY >= 0 ? boardDimensionY : 0;
     }
 
-    public processCommands(): Array<string> {
+    public processCommands(): Output {
         const commands : Array<string> = this.commands.filter((command) => command.length > 0);
         const board : Board = new Board(this.boardDimensionX, this.boardDimensionY);
         let robot : Robot | undefined = undefined;
-        let outputLog : Array<string> = [];
+        const output : Output = {
+            outputLog: [],
+            totalCommands: commands.length,
+            successfulCommands: 0,
+            failedCommands: 0
+        }
 
         commands.forEach((command) => {
             let { commandType, position, direction, errorMessage } = this.validateCommand(command);
             if (errorMessage !== undefined) {
-                outputLog.push(errorMessage);
+                output.outputLog.push(errorMessage);
+                output.failedCommands++;
                 return;
             }
 
             // If an instance of Robot does not exist, that means a PLACE command hasn't been called.
             if (robot === undefined && commandType != CommandType.PLACE) {
-                outputLog.push(this.getSkippedString(command, "a PLACE command hasn't been executed successfully"))
+                output.outputLog.push(this.getSkippedString(command, "a PLACE command hasn't been executed successfully"));
+                output.failedCommands++;
                 return;
             }
 
             // Process the command
             let commandOutput : string = command;
-
             switch (commandType) {
                 case CommandType.PLACE:
                     if (position === undefined || direction === undefined) {
                         commandOutput = this.getSkippedString(command, "invalid arguments");
+                        output.failedCommands++;
                         break;
                     }
                     robot = Robot.placeRobot(board, position, direction);
-                    if (robot === undefined) commandOutput = this.getSkippedString(command, "off-grid");
+                    if (robot === undefined) {
+                        commandOutput = this.getSkippedString(command, "off-grid");
+                        output.failedCommands++;
+                    } else {
+                        output.successfulCommands++;
+                    }
                     break;
                 case CommandType.MOVE:
                     const success = robot !== undefined && robot.move();
-                    if (!success) commandOutput = this.getSkippedString(command, "off-grid");
+                    if (success) {
+                        output.successfulCommands++;
+                    } else {
+                        commandOutput = this.getSkippedString(command, "off-grid");
+                        output.failedCommands++;
+                    }
                     break;
                 case CommandType.LEFT:
                     robot?.turnLeft();
+                    output.successfulCommands++;
                     break;
                 case CommandType.RIGHT:
                     robot?.turnRight();
+                    output.successfulCommands++;
                     break;
                 case CommandType.REPORT:
-                    commandOutput = robot !== undefined ? robot.reportCurrentPosition() : "";
+                    commandOutput += `\n${robot?.reportCurrentPosition()}`;
+                    output.successfulCommands++;
                     break;
                 default:
-                    commandOutput = this.getSkippedString(command, "invalid command type");
+                    commandOutput += this.getSkippedString(command, "invalid command type");
+                    output.successfulCommands++;
                     break;
             }
 
-            outputLog.push(commandOutput);
+            output.outputLog.push(commandOutput);
         });
 
-        return outputLog;
+        return output;
     }
 
     private validateCommand(command: string): Command {
@@ -100,12 +122,12 @@ export default class Engine {
         const yCoordinate = Number(args[1]);
         const direction = args[2];
 
-        if (xCoordinate === undefined || xCoordinate <= 0 || xCoordinate % 1 !== 0) {
+        if (xCoordinate === undefined || xCoordinate < 0 || xCoordinate % 1 !== 0) {
             commandArgs.errorMessage = this.getSkippedString(command, "invalid x coordinate");
             return commandArgs;
         }
 
-        if (yCoordinate === undefined || yCoordinate <= 0 || yCoordinate % 1 !== 0) {
+        if (yCoordinate === undefined || yCoordinate < 0 || yCoordinate % 1 !== 0) {
             commandArgs.errorMessage = this.getSkippedString(command, "invalid y coordinate");
             return commandArgs;
         }

@@ -2,7 +2,7 @@ import * as readline from 'readline';
 import fs from 'fs';
 import Engine from './models/Engine';
 
-const reader = readline.createInterface(fs.createReadStream("./commandlist.txt"))
+const reader = readline.createInterface(fs.createReadStream("./commandList1.txt"))
 
 // Read all commands from file
 let commands: Array<string> = [];
@@ -12,11 +12,13 @@ reader.on("line", (line: string) => {
 
 // Process commands once the reader finishes
 reader.on("close", () => {
-    const boardDimensionX: number = 0;
-    const boardDimensionY: number = 0;
+    const boardDimensionX: number = 5;
+    const boardDimensionY: number = 5;
     const engine = new Engine(commands, boardDimensionX, boardDimensionY);
-    const outputLog = engine.processCommands();
+    const output = engine.processCommands();
 
     // Print output log
-    outputLog.forEach(log => console.log(log));
+    output.outputLog.forEach(log => console.log(log));
+    console.log(`Total successful commands: ${output.successfulCommands}`);
+    console.log(`Total failed commands: ${output.failedCommands}`);
 })
