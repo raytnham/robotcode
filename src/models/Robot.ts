@@ -1,41 +1,67 @@
 import { Direction } from '../enums/Direction';
+import { Position } from '../interfaces/Position';
+import Board from './Board';
 
 export default class Robot {
-    private xCoordinate: number;
-    private yCoordinate: number;
+    private currentPosition: Position;
     private direction: Direction;
+    private board: Board;
+    private newPosition?: Position;
 
-    constructor(xCoordinate: number, yCoordinate: number, direction: Direction) {
-        this.xCoordinate = xCoordinate;
-        this.yCoordinate = yCoordinate;
+    private constructor(board: Board, position: Position, direction: Direction) {
+        this.board = board;
+        this.currentPosition = position;
         this.direction = direction;
     }
 
-    public place = (xCoordinate: number, yCoordinate: number, direction: Direction) => {
-        this.xCoordinate = xCoordinate;
-        this.yCoordinate = yCoordinate;
-        this.direction = direction;
+    public static placeRobot = (board: Board, position: Position, direction: Direction) : Robot | undefined => {
+        if (board.isWithinTheBoard(position)) {
+            return new Robot(board, position, direction);
+        }
+    }
+
+    private setCurrentPosition(position: Position) {
+        this.currentPosition = {
+            xCoordinate: position.xCoordinate,
+            yCoordinate: position.yCoordinate
+        }
+    }
+
+    private setNewPostion(position: Position) {
+        this.newPosition = {
+            xCoordinate: position.xCoordinate,
+            yCoordinate: position.yCoordinate
+        }
     }
 
     public move = (): boolean => {
+        this.setNewPostion(this.currentPosition);
+        if (this.newPosition == undefined) return false;
+
         switch (this.direction) {
             case Direction.EAST:
-                this.xCoordinate++;
+                this.newPosition.xCoordinate++;
                 break;
             case Direction.NORTH:
-                this.yCoordinate++;
+                this.newPosition.yCoordinate++;
                 break;
             case Direction.SOUTH:
-                this.yCoordinate--;
+                this.newPosition.yCoordinate--;
                 break;
             case Direction.WEST:
-                this.xCoordinate--;
+                this.newPosition.xCoordinate--;
                 break;
         }
-        return true;
+
+        if (this.board.isWithinTheBoard(this.newPosition)) {
+            this.setCurrentPosition(this.newPosition);
+            return true;
+        }
+
+        return false;
     }
 
-    public left = (): boolean => {
+    public turnLeft = (): void => {
         switch (this.direction) {
             case Direction.EAST:
                 this.direction = Direction.NORTH;
@@ -50,10 +76,9 @@ export default class Robot {
                 this.direction = Direction.SOUTH;
                 break;
         }
-        return true;
     }
 
-    public right = (): boolean => {
+    public turnRight = (): void => {
         switch (this.direction) {
             case Direction.EAST:
                 this.direction = Direction.SOUTH;
@@ -68,10 +93,9 @@ export default class Robot {
                 this.direction = Direction.NORTH;
                 break;
         }
-        return true;
     }
 
-    public report = (): string => {
-        return `Output: ${this.xCoordinate},${this.yCoordinate},${Direction[this.direction]}`;
+    public reportCurrentPosition = (): string => {
+        return `Output: ${this.currentPosition.xCoordinate},${this.currentPosition.yCoordinate},${Direction[this.direction]}`;
     }
 }

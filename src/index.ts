@@ -12,8 +12,11 @@ reader.on("line", (line: string) => {
 
 // Process commands once the reader finishes
 reader.on("close", () => {
-    const boardDimensionX: number = 5;
-    const boardDimensionY: number = 5;
+    const boardDimensionX: number = 0;
+    const boardDimensionY: number = 0;
     const engine = new Engine(commands, boardDimensionX, boardDimensionY);
-    engine.processCommands();
+    const outputLog = engine.processCommands();
+
+    // Print output log
+    outputLog.forEach(log => console.log(log));
 })

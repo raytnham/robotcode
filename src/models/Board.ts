@@ -1,46 +1,22 @@
-import Robot from './Robot';
-import { Direction } from '../enums/Direction';
+import { Position } from '../interfaces/Position';
 
-const boardOrigin: { xCoordinator: number, yCoordinate: number } = {
-    xCoordinator: 0,
+const boardOrigin: Position = {
+    xCoordinate: 0,
     yCoordinate: 0
 }
 
 export default class Board {
     private width: Number;
     private height: Number;
-    private robot?: Robot;
 
     constructor(width: Number, height: Number) {
-        this.width = width;
-        this.height = height;
+        this.width = width >= 0 ? width : 0;
+        this.height = height >= 0 ? height : 0;
     }
 
-    public setRobot = (robot: Robot) => {
-        this.robot = robot;
-    }
-
-    public getRobot = (): Robot | undefined => {
-        return this.robot;
-    }
-
-    public placeRobot = (xCoordinate: number, yCoordinate: number, direction: Direction): boolean => {
-        if (!this.isWithinTheGrid(xCoordinate, yCoordinate)) {
-            return false;
-        }
-
-        if (this.robot === undefined) {
-            this.setRobot(new Robot(xCoordinate, yCoordinate, direction));
-        } else {
-            this.robot?.place(xCoordinate, yCoordinate, direction);
-        }
-
-        return true;
-    }
-
-    private isWithinTheGrid = (xCoordinate: number, yCoordinate: number): boolean => {
-        return xCoordinate <= this.width && xCoordinate >= boardOrigin.xCoordinator &&
-            yCoordinate <= this.height && yCoordinate >= boardOrigin.yCoordinate;
+    public isWithinTheBoard = (position: Position): boolean => {
+        return position.xCoordinate <= this.width && position.xCoordinate >= boardOrigin.xCoordinate &&
+        position.yCoordinate <= this.height && position.yCoordinate >= boardOrigin.yCoordinate;
     }
 
     public toString = () => `width = ${this.width}; height = ${this.height}`;
