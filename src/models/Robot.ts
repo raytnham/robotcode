@@ -71,6 +71,6 @@ export class Robot {
     }
 
     public report = () : string => {
-        return `Output: ${this.xCoordinate}, ${this.yCoordinate}, ${Direction[this.direction]}`;
+        return `Output: ${this.xCoordinate},${this.yCoordinate},${Direction[this.direction]}`;
     }
 }
