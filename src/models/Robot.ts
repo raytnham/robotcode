@@ -20,18 +20,24 @@ export default class Robot {
         }
     }
 
-    private setCurrentPosition(position: Position) {
+    private setCurrentPosition(position: Position) : boolean {
+        if (this.board === undefined || !this.board.isWithinTheBoard(position))
+            return false;
         this.currentPosition = {
             xCoordinate: position.xCoordinate,
             yCoordinate: position.yCoordinate
         }
+        return true;
     }
 
-    private setNewPostion(position: Position) {
+    private setNewPostion(position: Position) : boolean {
+        if (this.board === undefined || !this.board.isWithinTheBoard(position))
+            return false;
         this.newPosition = {
             xCoordinate: position.xCoordinate,
             yCoordinate: position.yCoordinate
         }
+        return true;
     }
 
     public move = (): boolean => {
@@ -94,6 +100,9 @@ export default class Robot {
                 break;
         }
     }
+
+    public getCurrentPosition = (): Position => this.currentPosition;
+    public getCurrentDirection = (): Direction => this.direction;
 
     public reportCurrentPosition = (): string => {
         return `Output: ${this.currentPosition.xCoordinate},${this.currentPosition.yCoordinate},${Direction[this.direction]}`;

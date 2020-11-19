@@ -6,13 +6,16 @@ const boardOrigin: Position = {
 }
 
 export default class Board {
-    private width: Number;
-    private height: Number;
+    private width: number;
+    private height: number;
 
-    constructor(width: Number, height: Number) {
+    constructor(width: number, height: number) {
         this.width = width >= 0 ? width : 0;
         this.height = height >= 0 ? height : 0;
     }
+
+    public getWidth = (): number => this.width;
+    public getHeight = (): number => this.height;
 
     public isWithinTheBoard = (position: Position): boolean => {
         return position.xCoordinate <= this.width && position.xCoordinate >= boardOrigin.xCoordinate &&
