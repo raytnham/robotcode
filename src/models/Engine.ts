@@ -107,7 +107,8 @@ export default class Engine {
             return commandArgs;
         }
 
-        if (commandTokens.length == 1) {
+        // Do not need to process arguments for types other than PLACE
+        if (commandTokens.length == 1 || commandTypeEnum != CommandType.PLACE) {
             commandArgs.commandType = commandTypeEnum;
             return commandArgs;
         }
