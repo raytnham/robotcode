@@ -1,17 +1,17 @@
-import { Robot } from './Robot';
+import Robot from './Robot';
 import { Direction } from '../enums/Direction';
 
-const boardOrigin: { width : number, height : number } = {
+const boardOrigin: { width: number, height: number } = {
     width: 0,
     height: 0
 }
 
-export class Board {
+export default class Board {
     private width: Number;
     private height: Number;
     private robot?: Robot;
 
-    constructor(width: Number, height: Number){
+    constructor(width: Number, height: Number) {
         this.width = width;
         this.height = height;
     }
@@ -30,12 +30,12 @@ export class Board {
         )
             return false;
 
-        if (!this.robot) {
+        if (this.robot === undefined) {
             this.setRobot(new Robot(xCoordinate, yCoordinate, direction));
         } else {
             this.robot?.place(xCoordinate, yCoordinate, direction);
         }
-        
+
         return true;
     }
 

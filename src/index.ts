@@ -1,6 +1,6 @@
 import * as readline from 'readline';
 import fs from 'fs';
-import { Engine } from './models/Engine';
+import Engine from './models/Engine';
 
 const reader = readline.createInterface(fs.createReadStream(".\\src\\testCmd.txt"))
 
@@ -11,7 +11,7 @@ reader.on("line", (line: string) => {
 })
 
 // Process each command
-reader.on("close", ()=> {
+reader.on("close", () => {
     const engine = new Engine(commands);
     engine.processCommands();
 })

@@ -1,11 +1,11 @@
 import { Direction } from '../enums/Direction';
 
-export class Robot {
+export default class Robot {
     private xCoordinate: number;
     private yCoordinate: number;
     private direction: Direction;
 
-    constructor(xCoordinate: number, yCoordinate: number, direction: Direction){
+    constructor(xCoordinate: number, yCoordinate: number, direction: Direction) {
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
         this.direction = direction;
@@ -17,10 +17,10 @@ export class Robot {
         this.direction = direction;
     }
 
-    public getX = () => {return this.xCoordinate}
+    public getX = () => { return this.xCoordinate }
 
     public move = () => {
-        switch(this.direction) {
+        switch (this.direction) {
             case Direction.EAST:
                 this.xCoordinate++;
                 break;
@@ -37,7 +37,7 @@ export class Robot {
     }
 
     public left = () => {
-        switch(this.direction) {
+        switch (this.direction) {
             case Direction.EAST:
                 this.direction = Direction.NORTH;
                 break;
@@ -54,7 +54,7 @@ export class Robot {
     }
 
     public right = () => {
-        switch(this.direction) {
+        switch (this.direction) {
             case Direction.EAST:
                 this.direction = Direction.SOUTH;
                 break;
@@ -70,7 +70,7 @@ export class Robot {
         }
     }
 
-    public report = () : string => {
+    public report = (): string => {
         return `Output: ${this.xCoordinate},${this.yCoordinate},${Direction[this.direction]}`;
     }
 }
