@@ -1,4 +1,4 @@
-# robotcode
+# Robot Code
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
@@ -11,6 +11,7 @@ The application is a simulation of a toy robot moving on a square table top, of 
 
 * [NodeJS v.14.15.1](https://nodejs.org/en/download/)
 * [TypeScript v4.0.5](https://www.typescriptlang.org/)
+* [Mocha v8.2.1](https://mochajs.org/)
 
 <!-- GETTING STARTED -->
 ## Getting Started
@@ -52,3 +53,13 @@ REPORT
 
 Feel free to modify this file or switch to other test command lists. Open `root/src/index.ts` and change the file's name at `line 5`
 
+## Unit Testing
+
+Written using [Mocha](https://mochajs.org/)
+
+Run unit tests by:
+```sh
+npm test
+```
+
+Test cases are stored in `root/tests` directory
