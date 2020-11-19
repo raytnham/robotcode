@@ -1,9 +1,9 @@
 import Robot from './Robot';
 import { Direction } from '../enums/Direction';
 
-const boardOrigin: { width: number, height: number } = {
-    width: 0,
-    height: 0
+const boardOrigin: { xCoordinator: number, yCoordinate: number } = {
+    xCoordinator: 0,
+    yCoordinate: 0
 }
 
 export default class Board {
@@ -24,11 +24,10 @@ export default class Board {
         return this.robot;
     }
 
-    public place = (xCoordinate: number, yCoordinate: number, direction: Direction): boolean => {
-        if (xCoordinate > this.width || xCoordinate < boardOrigin.width ||
-            yCoordinate > this.height || yCoordinate < boardOrigin.height
-        )
+    public placeRobot = (xCoordinate: number, yCoordinate: number, direction: Direction): boolean => {
+        if (!this.isWithinTheGrid(xCoordinate, yCoordinate)) {
             return false;
+        }
 
         if (this.robot === undefined) {
             this.setRobot(new Robot(xCoordinate, yCoordinate, direction));
@@ -37,6 +36,11 @@ export default class Board {
         }
 
         return true;
+    }
+
+    private isWithinTheGrid = (xCoordinate: number, yCoordinate: number): boolean => {
+        return xCoordinate <= this.width && xCoordinate >= boardOrigin.xCoordinator &&
+            yCoordinate <= this.height && yCoordinate >= boardOrigin.yCoordinate;
     }
 
     public toString = () => `width = ${this.width}; height = ${this.height}`;

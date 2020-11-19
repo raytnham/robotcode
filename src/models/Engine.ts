@@ -5,21 +5,25 @@ import Board from './Board';
 
 export default class Engine {
     private commands: Array<string>;
+    private boardDimensionX: number;
+    private boardDimensionY: number;
 
-    constructor(commands: Array<string>) {
+    constructor(commands: Array<string>, boadDimensionX: number, boardDimensionY: number) {
         this.commands = commands;
+        this.boardDimensionX = boadDimensionX;
+        this.boardDimensionY = boardDimensionY;
     }
 
     public processCommands(): void {
         const commands = this.commands.filter((command) => command.length > 0);
-        const board = new Board(5, 5);
+        const board = new Board(this.boardDimensionX, this.boardDimensionY);
 
         commands.forEach((command) => {
             let { commandType, xCoordinate, yCoordinate, direction } = this.validateCommand(command);
             if (!commandType) return;
-            const robot = board.getRobot();
 
             // If an instance of Robot does not exist, that means a PLACE command hasn't been called.
+            const robot = board.getRobot();
             if (robot === undefined && commandType != CommandType.PLACE) {
                 console.log(this.getSkippedString(command, "a PLACE command hasn't been called."))
                 return;
@@ -27,30 +31,35 @@ export default class Engine {
 
             // Process the command
             console.log(command);
+            let success: boolean | undefined = false;
             switch (commandType) {
                 case CommandType.PLACE:
                     if (xCoordinate === undefined || yCoordinate === undefined || direction === undefined) {
                         console.log(this.getSkippedString(command, "invalid arguments"));
                         return;
                     }
-                    board.place(xCoordinate, yCoordinate, direction);
+                    success = board.placeRobot(xCoordinate, yCoordinate, direction);
                     break;
                 case CommandType.MOVE:
-                    robot?.move();
+                    success = robot?.move();
                     break;
                 case CommandType.LEFT:
-                    robot?.left();
+                    success = robot?.left();
                     break;
                 case CommandType.RIGHT:
-                    robot?.right();
+                    success = robot?.right();
                     break;
                 case CommandType.REPORT:
-                    var output = robot?.report();
-                    console.log(output);
+                    console.log(robot?.report());
+                    success = true;
                     break;
                 default:
                     console.log(this.getSkippedString(command, "invalid command type"));
-                    break;
+                    return;
+            }
+            if (!success) {
+                console.log(this.getSkippedString(command, "off-grid"));
+                return;
             }
         });
     }

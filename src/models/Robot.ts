@@ -17,9 +17,7 @@ export default class Robot {
         this.direction = direction;
     }
 
-    public getX = () => { return this.xCoordinate }
-
-    public move = () => {
+    public move = (): boolean => {
         switch (this.direction) {
             case Direction.EAST:
                 this.xCoordinate++;
@@ -34,9 +32,10 @@ export default class Robot {
                 this.xCoordinate--;
                 break;
         }
+        return true;
     }
 
-    public left = () => {
+    public left = (): boolean => {
         switch (this.direction) {
             case Direction.EAST:
                 this.direction = Direction.NORTH;
@@ -51,9 +50,10 @@ export default class Robot {
                 this.direction = Direction.SOUTH;
                 break;
         }
+        return true;
     }
 
-    public right = () => {
+    public right = (): boolean => {
         switch (this.direction) {
             case Direction.EAST:
                 this.direction = Direction.SOUTH;
@@ -68,6 +68,7 @@ export default class Robot {
                 this.direction = Direction.NORTH;
                 break;
         }
+        return true;
     }
 
     public report = (): string => {
