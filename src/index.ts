@@ -2,7 +2,7 @@ import * as readline from 'readline';
 import fs from 'fs';
 import Engine from './models/Engine';
 
-const reader = readline.createInterface(fs.createReadStream("./commandList1.txt"))
+const reader = readline.createInterface(fs.createReadStream("./commandListFiles/commandList1.txt"))
 
 // Read all commands from file
 let commands: Array<string> = [];
